@@ -9,25 +9,25 @@
   {% for post in posts %}
 
   <tr class='athing' id={{ post.id }}>
-    <td align="right" class="title" valign="top"><span class="rank">{{ forloop.counter|add:counter_init }}.</span>
+    <td align="right" class="title" valign="top">
+      <span class="rank">{{ forloop.counter|add:counter_init }}.</span>
     </td>
     <td class="votelinks" valign="top">
       <div class="center">
-        {% ifequal post.user request.user %}
+        {% if post.user == request.user %}
         <span class="asterisk">*</span><br>
         <div style="width: 14px; height: 1px"></div>
         {% else %}
-        {% if post.id in tracking %}
-          <a id="up_{{ post.id }}" onclick="upvotePost(this)">
-            <div class='votearrow' title='upvote'
-                 style='visibility: hidden'></div>
-          </a>
-        {% else %}
-          <a id="up_{{ post.id }}" onclick="upvotePost(this)" style="cursor: pointer">
-            <div class='votearrow' title='upvote'></div>
-          </a>
+          {% if post.id in tracking %}
+            <a id="up_{{ post.id }}" onclick="upvotePost(this)">
+              <div class='votearrow' title='upvote' style='visibility: hidden'></div>
+            </a>
+          {% else %}
+            <a id="up_{{ post.id }}" onclick="upvotePost(this)" style="cursor: pointer">
+              <div class='votearrow' title='upvote'></div>
+            </a>
+          {% endif %}
         {% endif %}
-        {% endifequal %}
       </div>
     </td>
     <td class="title">
@@ -45,7 +45,6 @@
   <tr>
     <td colspan="2"></td>
     <td class="subtext">
-
       <span class="score" id="score_{{ post.id }}">
         {{ post.votes }} point{{ post.votes|pluralize }}</span> by
       <a class="hnuser" href="{% url 'profile' user_id=post.user.id %}">{{ post.user.username }}</a>
@@ -57,10 +56,10 @@
           discuss
         {% endif %}
       </a>
-      {% ifequal post.user request.user %}
+      {% if post.user == request.user %}
         | <a href="{% url 'post_edit' post_id=post.id %}">edit</a> |
         <a href="{% url 'post_delete' post_id=post.id %}">delete</a>
-      {% endifequal %}
+      {% endif %}
     </td>
   </tr>
 

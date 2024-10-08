@@ -5,12 +5,8 @@ import sys
 
 
 def main():
-    if sys.argv[-1] == 'dev':
-        os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'datatau.settings')
-    else:
-        if sys.argv[-1] != 'prod':
-            sys.argv.append('prod')
-        os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'datatau.settings_prod')
+    # Set the environment variable for the settings module
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'datatau.settings')
 
     try:
         from django.core.management import execute_from_command_line
@@ -20,7 +16,7 @@ def main():
             "available on your PYTHONPATH environment variable? Did you "
             "forget to activate a virtual environment?"
         ) from exc
-    execute_from_command_line(sys.argv[:-1])
+    execute_from_command_line(sys.argv)
 
 
 if __name__ == '__main__':

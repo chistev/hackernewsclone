@@ -24,7 +24,10 @@ SECRET_KEY = 'development_secret_key'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = '*'
+ALLOWED_HOSTS = ['*']
+
+# Default auto field setting to use BigAutoField for primary keys
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Application definition
 
@@ -146,7 +149,7 @@ TWITTER_KEYS = {
     'ACCESS_SECRET': '',
 }
 
-# Dictionary of  of users that will retweet publisher tweets
+# Dictionary of users that will retweet publisher tweets
 TWITTER_RETWEET_KEYS = {
     'user1': {
         'CONSUMER_KEY': '',

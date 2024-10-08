@@ -11,7 +11,8 @@ from django.http import HttpResponse
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.utils import timezone
-from ratelimit.decorators import ratelimit
+from django_ratelimit.decorators import ratelimit
+
 
 from accounts.models import CustomUser
 from .models import Post, Comment, PostVoteTracking, CommentVoteTracking, parse_site
