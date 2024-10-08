@@ -3,7 +3,7 @@ import re
 import secrets
 
 import django
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, login
 from django.core.mail import send_mail
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
@@ -96,17 +96,11 @@ def check_signup(request):
         email = body['email'].strip()
         next_url = body['next']
 
-        if CustomUser.objects.filter(username=username):
+        if CustomUser.objects.filter(username=username).exists():
             log.info(f'username {username} already exists')
             return render(request, 'registration/login.html',
                           context={'error_signup': 'User already exists',
                                    'next': next_url})
-        elif not check_regex(username_pattern, username):
-            log.info(f'wrong username: {username}')
-            return render(request, 'registration/login.html',
-                          context={
-                              'error_signup': 'username can only contain alphanumeric characters along with . or _',
-                              'next': next_url})
         elif not password:
             log.info('empty password')
             return render(request, 'registration/login.html',
@@ -120,20 +114,23 @@ def check_signup(request):
         elif check_existing_email(email):
             log.info(f'email {email} already exists')
             return render(request, 'registration/login.html',
-                          context={'error_signup': f'email {email} already exists for an user, please try to login',
+                          context={'error_signup': f'email {email} already exists for a user, please try to login',
                                    'next': next_url})
         else:
+            # Create the user and set their password
             user = CustomUser(username=username, email=email)
             user.set_password(password)
-            user.api_key = secrets.token_urlsafe(15)
-            user.is_active = False
+            user.is_active = True  # Set the user to active
 
+            # Save the user
             user.save()
-            log.info(f'{username} has just sign up, sending confirmation email...')
-            send_confirmation_email(user)
+            log.info(f'{username} has just signed up and is now logged in.')
 
-            return HttpResponse(
-                "<h1>Congrats!</h1><p>You're just one step away to join the DataTau community.</p><p>We've just sent you a confirmation email. Please check your inbox and click on the confirmation link :)</p>")
+            # Log the user in immediately after registration
+            login(request, user)
+
+            # Redirect the user to the home page
+            return redirect('index')  # 'index' should be the name of your homepage URL pattern
 
 
 def activation(request, user_id, api_key):

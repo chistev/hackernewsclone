@@ -150,31 +150,27 @@ def send_confirmation_email(user):
 def update_profile(request, user_id):
     if request.method == 'POST':
         body = request.POST
-
         updated_profile = False
+        invalid_email = False
 
         user = request.user
+
+        # Update 'about' field
         if 'about' in body:
             user.about = body['about']
             updated_profile = True
 
-        invalid_email = True
+        # Update email without sending confirmation email
         if 'email' in body and validate_user_email(body['email']):
             user.email = body['email']
-            user.is_active = False
+            updated_profile = True  # Profile is updated if the email is valid
 
-            user.save()
-
-            log.info(f'{user.username} has just updated his email, sending confirmation email...')
-            send_confirmation_email(user)
-
-            return HttpResponse(
-                "<h1>Email successfully updated!</h1><p>We've just sent you a confirmation email. Please check your inbox and click on the confirmation link :)</p>")
-
+        # Save the updated user profile
         user.save()
 
         log.info(f'Profile {user.username} updated')
 
+        # Prepare the context for rendering the profile page
         context = {
             'user_id': user_id,
             'username': user.username,
@@ -185,6 +181,8 @@ def update_profile(request, user_id):
             'updated_profile': updated_profile,
             'own_user': True
         }
+
+        # Render the profile page with the updated context
         return render(request, 'user/profile.html', context=context)
 
 

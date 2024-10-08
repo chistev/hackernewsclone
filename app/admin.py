@@ -5,6 +5,7 @@ from .models import Post, PostVoteTracking, Comment, CommentVoteTracking
 
 class PostAdmin(admin.ModelAdmin):
     list_display = ['title', 'url_link', 'user', 'votes', 'show_dt', 'ask_dt']
+    exclude = ['site']  # Exclude the site field from the admin panel
 
 
 class PostVoteTrackingAdmin(admin.ModelAdmin):

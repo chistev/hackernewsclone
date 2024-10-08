@@ -1,12 +1,9 @@
 from urllib.parse import urlparse
-
 from django.db import models
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.html import mark_safe
-
 from accounts.models import CustomUser
-
 
 def parse_site(url):
     if url:
@@ -14,7 +11,6 @@ def parse_site(url):
         return f'{netloc[-2]}.{netloc[-1]}'
     else:
         return None
-
 
 # TODO: fix pluralize 1's
 def time_from(dt):
@@ -32,22 +28,20 @@ def time_from(dt):
     else:
         raise ValueError
 
-
 class Post(models.Model):
-
-    @property
-    def time_from_post(self):
-        return time_from(self.insert_date)
-
-    insert_date = models.DateTimeField(null=False)
+    insert_date = models.DateTimeField(auto_now_add=True)
     title = models.CharField(max_length=140, null=False)
     votes = models.IntegerField(default=1)
     url = models.CharField(max_length=300, null=True)
-    site = models.CharField(max_length=300, null=True)
+    site = models.CharField(max_length=300, null=True, editable=False)  # Marked as non-editable
     show_dt = models.BooleanField(default=False)
     ask_dt = models.BooleanField(default=False)
     user = models.ForeignKey(to=CustomUser, on_delete=models.CASCADE)
     tweeted = models.BooleanField(default=False)
+
+    @property
+    def time_from_post(self):
+        return time_from(self.insert_date)
 
     def url_link(self):
         return mark_safe(f'<a href="{self.url}" target="_blank">{self.url}</a>')
@@ -60,8 +54,6 @@ class Post(models.Model):
 
     def save(self, *args, **kwargs):
         self.site = parse_site(self.url)
-        if not self.insert_date:
-            self.insert_date = timezone.now()
 
         if 'Show DT' in self.title:
             self.show_dt = True
