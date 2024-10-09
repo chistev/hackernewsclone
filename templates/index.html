@@ -95,7 +95,7 @@
 {# confirm dialog for getting mails #}
 {% if request.user.id and not request.user.email %}
 <script>
-    var confirmAnswer = confirm("Hi {{ request.user }}, sorry for disturbing. We've notice that you are a registered user but you haven't filled the email field on your profile. Please fill it ASAP as we're migrating DataTau to email login only... Thanks for your understanding :)");
+    var confirmAnswer = confirm("Hi {{ request.user }}, sorry for disturbing. We've notice that you are a registered user but you haven't filled the email field on your profile. Please fill it ASAP to enable retrieval of passwords... Thanks for your understanding :)");
     if (confirmAnswer) {
         window.location = "{% url 'profile' user_id=request.user.id %}";
     }

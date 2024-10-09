@@ -39,6 +39,8 @@ urlpatterns = [
     path('ask/<int:page>', views.ask, name='ask_more'),
     path('show', views.show, name='show'),
     path('show/<int:page>', views.show, name='show_more'),
+    path('platform/<str:platform>/', views.platform_posts, name='platform_posts'),
+    path('platform/<str:platform>/<int:page>/', views.platform_posts, name='platform_posts_more'),
     path('api/post', csrf_exempt(views.api_post), name='post'),
     path('under-construction', views.under_construction, name='under_construction'),
     path('sitemap.xml', sitemap, {'sitemaps': sitemaps},

@@ -527,6 +527,19 @@ def show(request, page=None):
         return render_index_template(request, posts, tracking, 'show', page)
 
 
+def platform_posts(request, platform, page=None):
+    if request.method == 'GET':
+        page = get_page(page)
+
+        # Filter posts based on the platform selected by the user
+        posts = Post.objects.filter(platform=platform).order_by('-insert_date')[
+                (page - 1) * settings.PAGE_LIMIT:settings.PAGE_LIMIT * page]
+
+        tracking = get_tracking(request.user, posts)
+
+        return render_index_template(request, posts, tracking, platform, page)
+
+
 def submissions(request, user_id, page=None):
     if request.method == 'GET':
         page = get_page(page)

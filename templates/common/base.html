@@ -8,8 +8,6 @@
     <title>Wisesellers</title>
   {% endblock %}
 
-  <link rel="canonical" href="https://datatau.net">
-
   {% include 'common/analytics.html' %}
   {% include 'common/metadata.html' %}
   {% include 'common/style.html' %}
@@ -47,12 +45,13 @@
                     <a href="{% url 'submit' %}" style="color: white;">submit</a> |
                     
                     <!-- New links for Shopify, Walmart, Ebay, Etsy, Tiktok Shop, Alibaba -->
-                    <a href="#" style="color: white;">Shopify</a> |
-                    <a href="#" style="color: white;">Walmart</a> |
-                    <a href="#" style="color: white;">Ebay</a> |
-                    <a href="#" style="color: white;">Etsy</a> |
-                    <a href="#" style="color: white;">Tiktok Shop</a> |
-                    <a href="#" style="color: white;">Alibaba</a>
+                    <a href="{% url 'platform_posts' platform='shopify' %}" style="color: white;">Shopify</a> |
+<a href="{% url 'platform_posts' platform='walmart' %}" style="color: white;">Walmart</a> |
+<a href="{% url 'platform_posts' platform='ebay' %}" style="color: white;">Ebay</a> |
+<a href="{% url 'platform_posts' platform='etsy' %}" style="color: white;">Etsy</a> |
+<a href="{% url 'platform_posts' platform='tiktok_shop' %}" style="color: white;">Tiktok Shop</a> |
+<a href="{% url 'platform_posts' platform='alibaba' %}" style="color: white;">Alibaba</a>
+
               </span>
             </td>
             <td style="text-align:right;padding-right:4px;">

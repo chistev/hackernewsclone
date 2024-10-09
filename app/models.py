@@ -28,7 +28,18 @@ def time_from(dt):
     else:
         raise ValueError
 
+from django.db import models
+
 class Post(models.Model):
+    PLATFORMS = [
+        ('shopify', 'Shopify'),
+        ('alibaba', 'Alibaba'),
+        ('tiktok_shop', 'Tiktok Shop'),
+        ('walmart', 'Walmart'),
+        ('ebay', 'Ebay'),
+        ('etsy', 'Etsy'),
+    ]
+
     insert_date = models.DateTimeField(auto_now_add=True)
     title = models.CharField(max_length=140, null=False)
     votes = models.IntegerField(default=1)
@@ -38,6 +49,9 @@ class Post(models.Model):
     ask_dt = models.BooleanField(default=False)
     user = models.ForeignKey(to=CustomUser, on_delete=models.CASCADE)
     tweeted = models.BooleanField(default=False)
+
+    # New field to store the platform(s)
+    platform = models.CharField(max_length=50, choices=PLATFORMS, null=True, blank=True)
 
     @property
     def time_from_post(self):
@@ -61,6 +75,7 @@ class Post(models.Model):
             self.ask_dt = True
 
         super().save(*args, **kwargs)
+
 
 
 class Comment(models.Model):
