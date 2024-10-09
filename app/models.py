@@ -38,6 +38,7 @@ class Post(models.Model):
         ('walmart', 'Walmart'),
         ('ebay', 'Ebay'),
         ('etsy', 'Etsy'),
+        ('amazon', 'Amazon'),
     ]
 
     insert_date = models.DateTimeField(auto_now_add=True)
