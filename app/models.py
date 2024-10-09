@@ -28,7 +28,6 @@ def time_from(dt):
     else:
         raise ValueError
 
-from django.db import models
 
 class Post(models.Model):
     PLATFORMS = [
@@ -49,7 +48,7 @@ class Post(models.Model):
     show_dt = models.BooleanField(default=False)
     ask_dt = models.BooleanField(default=False)
     user = models.ForeignKey(to=CustomUser, on_delete=models.CASCADE)
-    tweeted = models.BooleanField(default=False)
+    # tweeted = models.BooleanField(default=False)
 
     # New field to store the platform(s)
     platform = models.CharField(max_length=50, choices=PLATFORMS, null=True, blank=True)
