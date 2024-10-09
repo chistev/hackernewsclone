@@ -28,32 +28,38 @@
 <div class="center">
   <table bgcolor="#f6f6ef" border="0" cellpadding="0" cellspacing="0" id="hnmain" width="85%">
     <tr>
-      <td bgcolor="#00b4b4">
+      <td bgcolor="#003366"> <!-- Change this to dark blue -->
         <table border="0" cellpadding="0" cellspacing="0" style="padding:2px" width="100%">
           <tr>
             <td style="width:18px;padding-right:4px">
               <a href="/">
-                <img alt="DataTau logo"
-                     height="18" src="{% static '/img/datatau.png' %}"
-                     style="border:1px white solid;"
-                     width="18">
+                <!-- Replace the logo image with "WS" -->
+                <span style="font-size: 18px; font-weight: bold; color: white;">WS</span>
               </a>
             </td>
             <td style="line-height:12pt; height:10px;">
               <span class="pagetop">
-                    <h1 class="hnname"><a href="/">Wisesellers</a></h1>
+                    <h1 class="hnname"><a href="/" style="color: white;">Wisesellers</a></h1>
 
-                    <a href="{% url 'new' %}">new</a> |
-                    <a href="{% url 'ask' %}">ask</a> |
-                    <a href="{% url 'show' %}">show</a> |
-                    <a href="{% url 'submit' %}">submit</a>
+                    <a href="{% url 'new' %}" style="color: white;">new</a> |
+                    <a href="{% url 'ask' %}" style="color: white;">ask</a> |
+                    <a href="{% url 'show' %}" style="color: white;">show</a> |
+                    <a href="{% url 'submit' %}" style="color: white;">submit</a> |
+                    
+                    <!-- New links for Shopify, Walmart, Ebay, Etsy, Tiktok Shop, Alibaba -->
+                    <a href="#" style="color: white;">Shopify</a> |
+                    <a href="#" style="color: white;">Walmart</a> |
+                    <a href="#" style="color: white;">Ebay</a> |
+                    <a href="#" style="color: white;">Etsy</a> |
+                    <a href="#" style="color: white;">Tiktok Shop</a> |
+                    <a href="#" style="color: white;">Alibaba</a>
               </span>
             </td>
             <td style="text-align:right;padding-right:4px;">
               <span class="pagetop">
                 {% if user.is_authenticated %}
                   <a id='me'
-                     href="{% url 'profile' user_id=user.id %}">{{ user.username }}</a>
+                     href="{% url 'profile' user_id=user.id %}" style="color: white;">{{ user.username }}</a>
                   ({{ user.karma }})
                   | 
                   <form action="{% url 'logout' %}" method="post" style="display:inline;">
@@ -61,7 +67,7 @@
                     <button type="submit" id='logout' style="background:none; border:none; color: inherit; cursor: pointer; text-decoration: none;">logout</button>
                   </form>
                 {% else %}
-                  <a href="{% url 'login' %}">login</a>
+                  <a href="{% url 'login' %}" style="color: white;">login</a>
                 {% endif %}
               </span>
             </td>
@@ -88,10 +94,9 @@
         <br>
         <div class="center">
             <span class="yclinks">
-              <a href="https://twitter.com/chistev12">Made with ❤️ by Chistev</a> |
-              <a href="mailto:info@whiteboxml.com">Support</a> |
-              <a href="mailto:info@whiteboxml.com">Contact</a> |
-              <a rel="noopener noreferrer" target="_blank" href="https://twitter.com/datatau_net">Twitter</a>
+              <a href="https://twitter.com/chistev12">built by Chistev</a> |
+              <a href="mailto:info@ecnus.com">Support</a> |
+              <a href="mailto:info@ecnus.com">Contact</a>
             </span><br><br>
         </div>
       </td>
