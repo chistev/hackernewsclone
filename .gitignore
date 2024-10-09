@@ -6,3 +6,4 @@ db.sqlite3
 *_prod.*
 admin
 .venv
+.env

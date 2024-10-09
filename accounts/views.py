@@ -1,16 +1,29 @@
+import json
 import logging
+import os
 import re
 import secrets
 
 import django
-from django.contrib.auth import authenticate, login
+import requests
+from django.contrib import messages
+from django.contrib.auth import authenticate, login, get_user_model
+from django.contrib.auth.tokens import default_token_generator
+from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import send_mail
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
+from django.template.loader import render_to_string
+from django.utils.encoding import force_bytes, force_str
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 
 from app.views import validate_user_email
 from .models import CustomUser
 
+from dotenv import load_dotenv
+
+# Load environment variables from the .env file
+load_dotenv()
 
 def get_logger():
     logger = logging.getLogger('views_account')
@@ -149,3 +162,97 @@ def activation(request, user_id, api_key):
             log.info(f'unable to activate user {user_id}')
 
         return redirect('index')
+
+
+def reset_password(request):
+    if request.method == 'POST':
+        username = request.POST.get('username').strip()
+
+        try:
+            user = CustomUser.objects.get(username=username)
+            # Generate a secure token and a uid
+            uid = urlsafe_base64_encode(force_bytes(user.pk))
+            token = default_token_generator.make_token(user)
+
+            # Get the current site domain
+            current_site = get_current_site(request)
+            domain = current_site.domain
+
+            # Create the reset link dynamically using the current site domain
+            reset_link = f'http://{domain}/accounts/login/reset_password_confirm/{uid}/{token}/'
+
+            # Create email content
+            subject = "Password Reset Request"
+            email_content = render_to_string('registration/reset_password_email.html',
+                                             {'username': username, 'reset_link': reset_link})
+
+            send_reset_email(user.email, subject, email_content)
+
+            messages.success(request, 'A password reset link has been sent to your email.')
+            return redirect('reset_password')
+        except CustomUser.DoesNotExist:
+            messages.error(request, 'This username does not exist.')
+            return redirect('reset_password')
+
+    return render(request, 'registration/reset_password.html')
+
+
+def send_reset_email(email, subject, html_content):
+    api_key = os.environ.get('BREVO_API_KEY')
+    if not api_key:
+        print("API key not found. Please set the 'BREVO_API_KEY' environment variable.")
+        return
+
+    api_url = 'https://api.brevo.com/v3/smtp/email'
+    sender_email = 'stephenowabie@gmail.com'
+    sender_name = 'Chistev'
+
+    payload = {
+        "sender": {
+            "name": sender_name,
+            "email": sender_email,
+        },
+        "to": [
+            {
+                "email": email
+            }
+        ],
+        "subject": subject,
+        "htmlContent": html_content
+    }
+
+    headers = {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'api-key': api_key
+    }
+
+    response = requests.post(api_url, data=json.dumps(payload), headers=headers)
+
+    if response.status_code == 201:
+        print("Password reset email sent successfully.")
+    else:
+        print(f"Failed to send password reset email. Response: {response.text}")
+
+def reset_password_confirm(request, uidb64, token):
+    User = get_user_model()
+    try:
+        uid = force_str(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=uid)
+    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+
+    if user is not None and default_token_generator.check_token(user, token):
+        if request.method == 'POST':
+            new_password = request.POST.get('new_password')
+            user.set_password(new_password)
+            user.save()
+            messages.success(request, 'Your password has been reset successfully.')
+            return redirect('login')  # Redirect to the login page
+
+        return render(request, 'registration/reset_password_confirm.html', {'validlink': True})
+    else:
+        messages.error(request, 'The password reset link is invalid or has expired.')
+        return redirect('reset_password')
+
+

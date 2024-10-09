@@ -5,7 +5,7 @@
 <head>
 
   {% block title %}
-    <title>DataTau - Hacker News Clone - Data Science Newsboard</title>
+    <title>Wisesellers</title>
   {% endblock %}
 
   <link rel="canonical" href="https://datatau.net">
@@ -41,7 +41,7 @@
             </td>
             <td style="line-height:12pt; height:10px;">
               <span class="pagetop">
-                    <h1 class="hnname"><a href="/">DataTau</a></h1>
+                    <h1 class="hnname"><a href="/">Wisesellers</a></h1>
 
                     <a href="{% url 'new' %}">new</a> |
                     <a href="{% url 'ask' %}">ask</a> |
@@ -55,7 +55,11 @@
                   <a id='me'
                      href="{% url 'profile' user_id=user.id %}">{{ user.username }}</a>
                   ({{ user.karma }})
-                  | <a id='logout' href="{% url 'logout' %}">logout</a>
+                  | 
+                  <form action="{% url 'logout' %}" method="post" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" id='logout' style="background:none; border:none; color: inherit; cursor: pointer; text-decoration: none;">logout</button>
+                  </form>
                 {% else %}
                   <a href="{% url 'login' %}">login</a>
                 {% endif %}
@@ -84,10 +88,9 @@
         <br>
         <div class="center">
             <span class="yclinks">
-              <a href="https://whiteboxml.com">Made with ❤️ by WhiteBoxᴹᴸ</a> |
+              <a href="https://twitter.com/chistev12">Made with ❤️ by Chistev</a> |
               <a href="mailto:info@whiteboxml.com">Support</a> |
               <a href="mailto:info@whiteboxml.com">Contact</a> |
-              <a href="{% url 'latest_feed' %}">RSS</a> |
               <a rel="noopener noreferrer" target="_blank" href="https://twitter.com/datatau_net">Twitter</a>
             </span><br><br>
         </div>

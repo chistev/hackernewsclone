@@ -1,16 +1,16 @@
 {% extends 'common/base.html' %}
 
 {% block title %}
-    <title>Edit | DataTau | {{ post.title }}</title>
+    <title>Edit | Wisesellers | {{ post.title }}</title>
 {% endblock %}
 
 {% block content_header %}
-    <tr id="pagespace" style="height:10px" title={{ post.title }}></tr>
+    <tr id="pagespace" style="height:10px" title="{{ post.title }}"></tr>
 {% endblock %}
 
 {% block content %}
 {% if errors %}
-Please try again.<br><br>
+    Please try again.<br><br>
 {% endif %}
 <table class="fatitem" border="0">
   <tr class='athing' id='{{ post.id }}'>
@@ -42,15 +42,15 @@ Please try again.<br><br>
       | <a href="{% url 'post' post_id=post.id %}">
       {{ post.comment_set.count }} comment{{ post.comment_set.count|pluralize }}
     </a>
-      {% ifequal post.user request.user %}
+      {% if post.user == request.user %}
       | <a href="{% url 'post_edit' post_id=post.id %}">edit</a> |
       <a href="{% url 'post_delete' post_id=post.id %}">delete</a>
-      {% endifequal %}
+      {% endif %}
     </td>
   </tr>
   <tr style="height:10px"></tr>
 </table>
-{% ifequal post.user request.user %}
+{% if post.user == request.user %}
 <form class="itemform" method="post" action="{% url 'post_edit' post_id=post.id %}">
   {% csrf_token %}
 
@@ -71,5 +71,5 @@ Please try again.<br><br>
   </table>
   <br><input type="submit" value="update">
 </form>
-{% endifequal %}
+{% endif %}
 {% endblock %}
